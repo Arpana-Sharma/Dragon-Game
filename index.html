@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragon and Dinasour Game</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+        }
+        #container{
+            width: 100vw;
+            height: 100vh;
+            background-image: url("bg.png");
+        }
+        #dinasour{
+            position: absolute;
+            bottom: 0px;
+            left: 420px;
+            display: block;
+            width: 200px;
+        }
+        #dragon{
+            position: absolute;
+            right: 0px;
+            bottom: 0px;
+            display: block;
+            width: 100px;
+            animation: move 4s linear infinite;
+        }
+        @keyframes move {
+            0%{
+                right: 0px;
+            }
+            100%{
+                right: 1160px;
+            }
+        }
+        #gameOver{
+            width: 400px;
+            height: 130px;
+            border: 0.7px solid rgb(239, 238, 238);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+        h1,h2{
+            text-align: center;
+        }
+        button{
+            padding: 3px;
+            width: 100px;
+            height: 44px;
+            font-weight: 200;
+            background-color: rgb(3, 3, 85);
+            cursor: pointer;
+            color: white;
+            border: 2px solid white;
+            margin-left: 150px;
+            margin-top: 12px;
+        }
+        .animateDino{
+            animation: save 1.5s linear infinite;
+        }
+        @keyframes save {
+            0%{
+                bottom: 0px;
+            }
+            50%{
+                bottom: 150px;
+            }
+            100%{
+                bottom: 0px;
+            }
+        }
+        #scoreCard{
+            padding: 10px 20px;
+            margin: 30px;
+            width: 40%;
+            font-size: 4rem;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <embed id = "sound" src="Naina_da_kya_kasoor.mp3" loop="true" autostart="true" width="2" height="0">
+        <div id="main-cont">
+            <img src="dino.png" alt="" id = "dinasour">
+            <img src="dragon.png" alt="" id = "dragon">
+        </div>
+        <h1 id = "scoreCard"></h1>
+    </div>
+    <div id="gameOver">
+        <h1>Game Over!!</h1>
+        <h2 id = "result"></h2>
+        <button id = "play-again" type="button">Play Again</button>
+    </div>
+    <script>
+        document.getElementById("sound").src = "Naina_da_kya_kasoor.mp3"; 
+        var score = 0;
+        const container = document.getElementById('container');
+        const mainCont = document.getElementById('main-cont');
+        const gameOver = document.getElementById('gameOver');
+        const dinasour = document.getElementById('dinasour');
+        const dragon = document.getElementById("dragon");
+        const result = document.getElementById("result");
+        const playAgain = document.getElementById('play-again');
+        const scoreCard = document.getElementById('scoreCard');
+        document.addEventListener('keydown', (event) => {
+            name = event.key;
+            if(name == "ArrowUp"){
+                dinasour.classList.add('animateDino');
+                setTimeout(() => {
+                    dinasour.classList.remove('animateDino');
+                },1500);
+            }
+            if(event.key == 37){
+                var dinasourLeft = parseInt(window.getComputedStyle(dinasour).getPropertyValue("left"));
+                dinasour.style.left = dinasourLeft-112+"px";
+            }
+        });
+        var init = new Date();
+        setInterval(function () {
+            var dinasourTop = parseInt(window.getComputedStyle(dinasour).getPropertyValue("top"))
+            var dinasourLeft = parseInt(window.getComputedStyle(dinasour).getPropertyValue("left"));
+            var dragonLeft = parseInt(window.getComputedStyle(dragon).getPropertyValue("left"));
+            var dragonTop = parseInt(window.getComputedStyle(dragon).getPropertyValue("top"));
+            if (((dragonTop-dinasourTop)<=90) && (((dragonLeft-dinasourLeft)<=210)) && ((dragonLeft-dinasourLeft))>=0) {                
+                container.style.backgroundImage = "";
+                container.style.display = "none";
+                gameOver.style.display = "block";
+                result.innerHTML = `Score: ${score}`; 
+                document.getElementById("sound").src = "gameover.mp3";             
+            }
+            var final = new Date()
+            if((final - init) > 3000){
+                score++;
+                init = final;
+                scoreCard.style.backgroundColor = "white";
+                scoreCard.innerHTML = `Your Present Score: ${score}`;
+            }
+        }, 300);
+        playAgain.addEventListener('click',function(){
+            location.reload();
+        });
+    </script>
+</body>
+</html>
